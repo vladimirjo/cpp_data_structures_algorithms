@@ -135,7 +135,7 @@ public:
 
     T deleteFromTail() {
         if(isEmpty()){
-            throw std::out_of_range("Cannot delete node from an empty list!");
+            throw std::out_of_range("Cannot delete node from an empty list.");
         }
 
         T value = tail->getValue();
@@ -159,8 +159,28 @@ public:
         length--;
         return value;
     }
-    
-    // Node *getNodeWithIndex(int index);
+
+    T getNodeValueWithIndex(int index){
+        if(isEmpty()){
+            throw std::out_of_range("List is empty.");
+        }
+
+        if (index >= length || index < 0) {
+            throw std::out_of_range("Index is larger than length of the List.");
+        }
+
+        Node<T> *node = head;
+        int counter = 0;
+        while (node != nullptr) {
+            if (counter == index) {
+                break;
+            }
+            node = node->getNext();
+            counter++;
+        }
+        return node->getValue();
+    }
+
     // void setNodeWithIndex(int index, T value);
     // bool insertNodeAfterIndex (int index, T value);
     // Node *removeNodeWithIndex(int index);

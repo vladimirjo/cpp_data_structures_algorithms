@@ -10,8 +10,16 @@ int main () {
         SinglyLinkedList<int> list = SinglyLinkedList<int>();
         list.addToTail(10);
         list.addToTail(20);
-        std::cout << list.deleteFromHead() << std::endl;
-        std::cout << list.deleteFromHead() << std::endl;
+        list.addToTail(30);
+        list.addToTail(40);
+
+        std::cout << list.getNodeValueWithIndex(0) << std::endl;
+        std::cout << list.getNodeValueWithIndex(1) << std::endl;
+        std::cout << list.getNodeValueWithIndex(2) << std::endl;
+        std::cout << list.getNodeValueWithIndex(3) << std::endl;
+
+        // std::cout << list.deleteFromHead() << std::endl;
+        // std::cout << list.deleteFromHead() << std::endl;
     }
 
     // std::cout << list;
