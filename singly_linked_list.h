@@ -2,6 +2,7 @@
 #define SIGNLY_LINKED_LIST
 
 #include <iostream>
+#include <exception>
 
 template <class T>
 class Node {
@@ -110,8 +111,55 @@ public:
         return;
     }
 
-    // T deleteFromHead(T value);
-    // T deleteFromTail(T value);
+    T deleteFromHead() {
+        if(isEmpty()){
+            throw std::out_of_range("Cannot delete node from an empty list!");
+        }
+
+        T value = head->getValue();
+        if ( head == tail) {
+            delete head;
+            tail = nullptr;
+            head = nullptr;
+            length = 0;
+            return value;
+        }
+
+        Node<T> *oldHead = head;
+        head = head->getNext();
+        delete oldHead;
+        oldHead = nullptr;
+        length--;
+        return value;
+    }
+
+    T deleteFromTail() {
+        if(isEmpty()){
+            throw std::out_of_range("Cannot delete node from an empty list!");
+        }
+
+        T value = tail->getValue();
+        if ( tail == head) {
+            delete tail;
+            tail = nullptr;
+            head = nullptr;
+            length = 0;
+            return value;
+        }
+
+        Node<T> *oldTail = tail;
+        Node<T> *beforeTail = head;
+        while(beforeTail != tail) {
+            beforeTail = beforeTail->getNext();
+        }
+
+        tail = beforeTail;
+        delete oldTail;
+        oldTail = beforeTail = nullptr;
+        length--;
+        return value;
+    }
+    
     // Node *getNodeWithIndex(int index);
     // void setNodeWithIndex(int index, T value);
     // bool insertNodeAfterIndex (int index, T value);
