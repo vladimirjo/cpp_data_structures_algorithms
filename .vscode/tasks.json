@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "C/C++: g++.exe build active file",
+            "type": "shell",
+            "command": "g++.exe",
+            "args": [
+                "-g",
+                "-fdiagnostics-color=always",
+		        "-Wall",
+                "-Werror",
+                "-o0",
+                "-o",
+                "${fileBasenameNoExtension}.exe",
+                "${fileBasename}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        }
+    ]
+}
