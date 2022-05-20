@@ -1,5 +1,5 @@
-#ifndef SIGNLY_LINKED_LIST
-#define SIGNLY_LINKED_LIST
+#ifndef SINGLY_LINKED_LIST
+#define SINGLY_LINKED_LIST
 
 #include <iostream>
 #include <exception>
@@ -160,15 +160,14 @@ public:
         return value;
     }
 
-    T getNodeValueWithIndex(int index){
-        if(isEmpty()){
+    Node<T> *getNodeWithIndex(int index) {
+       if(isEmpty()){
             throw std::out_of_range("List is empty.");
         }
-
         if (index >= length || index < 0) {
-            throw std::out_of_range("Index is larger than length of the List.");
+            throw std::out_of_range("Index is out of range.");
         }
-
+    
         Node<T> *node = head;
         int counter = 0;
         while (node != nullptr) {
@@ -178,20 +177,69 @@ public:
             node = node->getNext();
             counter++;
         }
+        return node;
+    }
+
+    T getValueWithIndex(int index){
+        Node<T> *node = getNodeWithIndex(index);
         return node->getValue();
     }
 
-    // void setNodeWithIndex(int index, T value);
-    // bool insertNodeAfterIndex (int index, T value);
+    void setValueWithIndex(int index, T value){
+        Node<T> *node = getNodeWithIndex(index);
+        node->setValue(value);
+    }
+
+    bool insertNodeAfterIndex (int index, T value) {
+        Node<T> *node = nullptr;
+        try {
+            node = getNodeWithIndex(index);
+        } catch (...) {
+            return false;
+        }
+
+        Node<T> *newNode = new Node(value);
+        newNode->setNext(node->getNext());
+        node->setNext(newNode);
+        length++;
+        return true;
+    }
+
+    bool insertNodeBeforeIndex (int index, T value) {
+        if (index >= length) {
+            return false;
+        }
+        if (index == 0 || head == tail) {
+            addToHead(value);
+            return true;
+        }
+        return insertNodeAfterIndex(index-1, value);
+    }
+
     // Node *removeNodeWithIndex(int index);
     // SinglyLinkedList& reverse();
     // bool isValueInList(int) const;
-    // void print();
+    void print(void){
+        if(isEmpty()) {
+            std::cout << "List is empty" << std::endl;
+        } else {
+            Node<T> *node = getNodeWithIndex(0);
+            while (node != nullptr) {
+                std::cout << node->getValue() << std::endl;
+                node = node->getNext();
+            }
+        }
+    }
 
 private:
     Node<T> *head;
     Node<T> *tail;
     int length;
 };
+
+template <class T>
+void print_out (SinglyLinkedList<T> list) {
+
+}
 
 #endif
