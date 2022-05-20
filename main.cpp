@@ -16,8 +16,9 @@ int main () {
     std::cout << "---" << std::endl;
     // list.deleteFromTail();
     // list.removeNodeWithIndex(2);
-    list.reverse();
-    list.print();
+    // list.reverse();
+    std::cout << list.isValueInList(100) << std::endl;
+    // list.print();
 
 
     return 0;

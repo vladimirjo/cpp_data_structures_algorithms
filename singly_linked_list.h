@@ -279,6 +279,7 @@ public:
             if (node->getValue() == value) {
                 return true;
             }
+            node = node->getNext();
         }
         return false;
     }
