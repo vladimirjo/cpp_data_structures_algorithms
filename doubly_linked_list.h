@@ -1,5 +1,5 @@
-#ifndef SINGLY_LINKED_LIST
-#define SINGLY_LINKED_LIST
+#ifndef DOUBLY_LINKED_LIST_H_
+#define DOUBLY_LINKED_LIST_H_
 
 #include <iostream>
 #include <exception>
@@ -7,59 +7,53 @@
 template <class T>
 class Node {
 public:
-    Node ()
-        : value{0}, next {0} {}
+    Node () : value{0}, next {0}, previous{0} {}
     
-    Node (T value)
-        : value {value}, next {0} {}
+    Node (T value) : value {value}, next {0}, previous{0} {}
 
-    inline T getValue() const {
-        return value;
-    }
+    inline T getValue() const {return value;}
 
-    inline Node *getNext() const {
-        return next;
-    }
+    inline void setValue(T value) {this->value = value;}
 
-    inline void setValue(T value) {
-        this->value = value;
-        return;
-    }
+    inline Node *getNext() const {return next;}
 
-    inline void setNext(Node *next) {
-        this->next = next;
-        return;
-    }
+    inline void setNext() const {this->next = next;}
+
+    inline Node *getPrevious() const {return previous;}
+
+    inline void setPrevious(Node *previous) {this->previous = previous;}
 
 private:
     T value;
     Node<T> *next;
+    Node<T> *previous;
 };
 
 template <class T>
-class SinglyLinkedList {
+class DoublyLinkedList {
 public:
-    SinglyLinkedList ()
+    DoublyLinkedList ()
     : head {0}, tail {0}, length {0} {}
     
-    ~SinglyLinkedList() {
+    ~DoublyLinkedList() {
         if (isEmpty()) return;
 
         Node<T> *node = head;
-        while (node != nullptr) {
-            if ( node == tail) {
-                delete node;
-                tail = nullptr;
-                head = nullptr;
-                length = 0;
-                break;
-            }
 
+        if (node == tail) {
+            delete node;
+            tail = nullptr;
+            head = nullptr;
+            length = 0;
+        }
+
+        while (node != nullptr) {
             head = head->getNext();
             delete node;
             node = head;
             length--;
         }
+
         return;
     }
     
@@ -67,9 +61,9 @@ public:
         return head == nullptr;
     }
 
-    friend std::ostream& operator<< (std::ostream& out, const SinglyLinkedList& list) {
+    friend std::ostream& operator<< (std::ostream& out, const DoublyLinkedList& list) {
         if (list.head == nullptr) {
-            std::cout << "Linked list is empty" << std::endl;
+            std::cout << "Doubly Linked list is empty" << std::endl;
             return out;
         }
         Node<T> *node = list.head;
@@ -96,13 +90,16 @@ public:
 
     void addToHead(T value) {
         Node<T> *node = new Node(value);
-        if (head == nullptr) {
+
+        if (isEmpty()) {
             head = node;
             tail = node;
             length++;
             return;
         }
+
         node->setNext(head);
+        head->setPrevious(node);
         head = node;
         length++;
     }
@@ -112,8 +109,10 @@ public:
             addToHead(value);
             return;
         }
+
         Node<T> *node = new Node(value);
         tail->setNext(node);
+        node->getPrevious(tail);
         tail = node;
         length++;
         return;
@@ -135,8 +134,10 @@ public:
 
         Node<T> *oldHead = head;
         head = head->getNext();
+        head->setPrevious(nullptr);
+
         delete oldHead;
-        oldHead = nullptr;
+        
         length--;
         return value;
     }
@@ -147,7 +148,8 @@ public:
         }
 
         T value = tail->getValue();
-        if ( tail == head) {
+
+        if (tail == head) {
             delete tail;
             tail = nullptr;
             head = nullptr;
@@ -155,20 +157,12 @@ public:
             return value;
         }
 
-        Node<T> *node = head;
-        Node<T> *previous = node;
-
-        while(node != tail) {
-            previous = node;
-            node = node->getNext();
-        }
-
-        tail = previous;
+        Node<T> *node = tail;
+        tail = tail->getPrevious();
         tail->setNext(nullptr);
         delete node;
-        previous = node = nullptr;
+
         length--;
-        
         return value;
     }
 
@@ -237,6 +231,7 @@ public:
         Node<T> *node = previous->getNext();
 
         if (node == tail) {
+            // previous = nullptr;
             return deleteFromTail();
         }
 
@@ -244,7 +239,6 @@ public:
         previous->setNext(node->getNext());
         previous = nullptr;
         delete node;
-        length--;
 
         return value;
     }
