@@ -86,6 +86,14 @@ public:
         return out;
     }
 
+    Node<T> *getHead(void) {
+        return head;
+    }
+
+    Node<T> *getTail(void) {
+        return tail;
+    }
+
     void addToHead(T value) {
         Node<T> *node = new Node(value);
         if (head == nullptr) {
@@ -147,15 +155,18 @@ public:
             return value;
         }
 
-        Node<T> *oldTail = tail;
-        Node<T> *beforeTail = head;
-        while(beforeTail != tail) {
-            beforeTail = beforeTail->getNext();
+        Node<T> *node = head;
+        Node<T> *previous = node;
+
+        while(node != tail) {
+            previous = node;
+            node = node->getNext();
         }
 
-        tail = beforeTail;
-        delete oldTail;
-        oldTail = beforeTail = nullptr;
+        tail = previous;
+        tail->setNext(nullptr);
+        delete node;
+        previous = node = nullptr;
         length--;
         return value;
     }
@@ -216,14 +227,67 @@ public:
         return insertNodeAfterIndex(index-1, value);
     }
 
-    // Node *removeNodeWithIndex(int index);
-    // SinglyLinkedList& reverse();
-    // bool isValueInList(int) const;
+    T removeNodeWithIndex(int index) {
+        if (index == 0) {
+            return deleteFromHead();
+        }
+
+        Node<T> *previous = getNodeWithIndex(index-1);
+        Node<T> *node = previous->getNext();
+
+        if (node == tail) {
+            // previous = nullptr;
+            return deleteFromTail();
+        }
+
+        T value = node->getValue();
+        previous->setNext(node->getNext());
+        previous = nullptr;
+        delete node;
+
+        return value;
+    }
+
+    SinglyLinkedList& reverse() {
+        if (isEmpty() || head == tail) {
+            return *this;
+        }
+
+        Node<T> *node = head;
+        head = tail;
+        tail = node;
+
+        Node<T> *next = nullptr;
+        Node<T> *previous = nullptr;
+
+        while (node != nullptr) {
+            next = node->getNext();
+            node->setNext(previous);
+            previous = node;
+            node = next;
+        }
+
+        return *this;
+    }
+
+    bool isValueInList(int value) {
+        if (isEmpty()) {
+            return false;
+        }
+        Node<T> *node = head;
+        while (node != nullptr) {
+            if (node->getValue() == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void print(void){
         if(isEmpty()) {
             std::cout << "List is empty" << std::endl;
         } else {
-            Node<T> *node = getNodeWithIndex(0);
+            Node<T> *node = getHead();
             while (node != nullptr) {
                 std::cout << node->getValue() << std::endl;
                 node = node->getNext();

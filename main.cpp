@@ -10,8 +10,13 @@ int main () {
     list.addToTail(10);
     list.addToTail(20);
     list.addToTail(30);
+    list.addToTail(40);
+    list.addToTail(50);
     list.print();
-    std::cout << std::boolalpha << list.insertNodeBeforeIndex(0, 50) << std::endl;
+    std::cout << "---" << std::endl;
+    // list.deleteFromTail();
+    // list.removeNodeWithIndex(2);
+    list.reverse();
     list.print();
 
 
