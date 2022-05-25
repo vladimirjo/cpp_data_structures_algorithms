@@ -7,12 +7,13 @@
 /*
  *
  * Node class - it holds a generic value and it has a pointer to the next node
+ * Copy or Move constructor is not applicable
  * 
  */
 template <class T>
 class Node {
 public:
-    Node () : value{0}, next {0} {}
+    Node () : value{0}, next {nullptr} {}
     
     Node (T value, Node *next = nullptr) : value {value}, next {next} {}
 
@@ -32,34 +33,44 @@ private:
 /*
  *
  * Singly Linked List class
- * Add a copy constructor and move constructor 
+ * Move constructor is not applicable (cannot make a list with contents as right value)
  * 
  */
 template <class T>
 class SinglyLinkedList {
 public:
-    SinglyLinkedList ()
-    : head {0}, tail {0}, length {0} {}
+    SinglyLinkedList () : head {0}, tail {0}, length {0} {}
+
+    SinglyLinkedList(const SinglyLinkedList& list) : head {0}, tail {0}, length {0} {
+        Node<T> *traverseNode = list.getHead();
+
+        while (traverseNode != nullptr) {
+            T value = traverseNode->getValue();
+            addToTail(value);
+            traverseNode = traverseNode->getNext();
+        }
+    }
+
+    SinglyLinkedList& operator=(const SinglyLinkedList& list) {
+        if (this == &list) {
+            return *this;
+        }
+        
+        clearList();
+
+        Node<T> *traverseNode = list.getHead();
+
+        while (traverseNode != nullptr) {
+            T value = traverseNode->getValue();
+            addToTail(value);
+            traverseNode = traverseNode->getNext();
+        }
+
+        return *this;
+    }
     
     ~SinglyLinkedList() {
-        if (isEmpty()) return;
-
-        Node<T> *node = head;
-        while (node != nullptr) {
-            if ( node == tail) {
-                delete node;
-                tail = nullptr;
-                head = nullptr;
-                length = 0;
-                break;
-            }
-
-            head = head->getNext();
-            delete node;
-            node = head;
-            length--;
-        }
-        return;
+        clearList();
     }
     
     inline int isEmpty () {
@@ -85,7 +96,32 @@ public:
         return out;
     }
 
-    Node<T> *getHead(void) {
+    void clearList(void) {
+        if (isEmpty()) return;
+
+        if (head == tail) {
+            delete head;
+            tail = nullptr;
+            head = nullptr;
+            length = 0;
+            return;
+        }
+
+        Node<T> *node = head;
+        while (node != nullptr) {
+            head = head->getNext();
+            delete node;
+            node = head;
+            length--;
+        }
+
+        tail = nullptr;
+        head = nullptr;
+        length = 0;
+        return;
+    }
+
+    Node<T> *getHead(void) const {
         return head;
     }
 
