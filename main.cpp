@@ -1,24 +1,26 @@
 #include <iostream>
 #include <stdbool.h>
 // #include "utils.h"
-#include "singly_linked_list.h"
+// #include "singly_linked_list.h"
 // #include "insert_sort.h"
 // #include "merge_sort.h"
-// #include "doubly_linked_list.h"
+#include "doubly_linked_list.h"
 
 int main () {
-    SinglyLinkedList list = SinglyLinkedList<int>();
+    DoublyLinkedList list = DoublyLinkedList<int>();
     list.addToTail(10);
     list.addToTail(20);
     list.addToTail(30);
     list.addToTail(40);
     list.addToTail(50);
-    SinglyLinkedList newList = SinglyLinkedList<int>();
+    DoublyLinkedList newList = DoublyLinkedList<int>();
+    newList = list;
+    newList.insertNodeBeforeIndex(2, 1000);
+    // std::cout << list << std::endl;
     list.print();
     list.deleteFromHead();
     list.deleteFromTail();
-    newList = list;
-    // SinglyLinkedList newList2 {list};
+    // DoublyLinkedList newList2 {list};
     std::cout << "---" << std::endl;
     std::cout << list << std::endl;
     std::cout << "---" << std::endl;

@@ -7,7 +7,7 @@
 /*
  *
  * Node class - it holds a generic value and it has a pointer to the next node
- * Copy or Move constructor is not applicable
+ * Copy constructor, Move constructor and assignment operator is not applicable for this class
  * 
  */
 template <class T>
@@ -131,12 +131,10 @@ std::ostream& operator<< (std::ostream& out, const SinglyLinkedList<T>& list) {
         std::cout << "Linked list is empty" << std::endl;
         return out;
     }
+
     Node<T> *node = list.head;
-    int index = 1;
-    if (list.head == list.tail) {
-        std::cout << "Index " << index <<": \"" << node->getValue() << "\"" << std::endl;
-        return out;
-    }
+
+    int index = 0;
     while(node != nullptr) {
         std::cout << "Index " << index <<": \"" << node->getValue() << "\"" << std::endl;
         node = node->getNext();
@@ -378,12 +376,16 @@ template <class T>
 void SinglyLinkedList<T>::print(void){
     if(isEmpty()) {
         std::cout << "List is empty" << std::endl;
-    } else {
-        Node<T> *node = getHead();
-        while (node != nullptr) {
-            std::cout << node->getValue() << std::endl;
-            node = node->getNext();
-        }
+        return;
+    }
+
+    Node<T> *node = head;
+
+    int index = 0;
+    while(node != nullptr) {
+        std::cout << "Index " << index <<": \"" << node->getValue() << "\"" << std::endl;
+        node = node->getNext();
+        index++;
     }
 }
 
