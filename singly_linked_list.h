@@ -4,38 +4,37 @@
 #include <iostream>
 #include <exception>
 
+/*
+ *
+ * Node class - it holds a generic value and it has a pointer to the next node
+ * 
+ */
 template <class T>
 class Node {
 public:
-    Node ()
-        : value{0}, next {0} {}
+    Node () : value{0}, next {0} {}
     
-    Node (T value)
-        : value {value}, next {0} {}
+    Node (T value, Node *next = nullptr) : value {value}, next {next} {}
 
-    inline T getValue() const {
-        return value;
-    }
+    inline T getValue() const {return value;}
 
-    inline Node *getNext() const {
-        return next;
-    }
+    inline Node *getNext() const {return next;}
 
-    inline void setValue(T value) {
-        this->value = value;
-        return;
-    }
+    inline void setValue(T value) {this->value = value;}
 
-    inline void setNext(Node *next) {
-        this->next = next;
-        return;
-    }
+    inline void setNext(Node *next) {this->next = next;}
 
 private:
     T value;
     Node<T> *next;
 };
 
+/*
+ *
+ * Singly Linked List class
+ * Add a copy constructor and move constructor 
+ * 
+ */
 template <class T>
 class SinglyLinkedList {
 public:

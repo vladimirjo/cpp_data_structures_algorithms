@@ -4,22 +4,29 @@
 #include <iostream>
 #include <exception>
 
+
+/*
+ *
+ * Node class - it holds a generic value, it has pointer to the next node and a pointer to the previous node
+ * 
+ */
 template <class T>
 class Node {
 public:
-    Node () : value{0}, next {0}, previous{0} {}
+    Node () : value{0}, next {nullptr}, previous{nullptr} {}
     
-    Node (T value) : value {value}, next {0}, previous{0} {}
+    Node (T value, Node *next = nullptr, Node *previous = nullptr) 
+        : value {value}, next {next}, previous{previous} {}
 
     inline T getValue() const {return value;}
 
     inline void setValue(T value) {this->value = value;}
 
-    inline Node *getNext() const {return next;}
+    inline Node<T> *getNext() const {return next;}
 
-    inline void setNext() const {this->next = next;}
+    inline void setNext(Node *next) {this->next = next;}
 
-    inline Node *getPrevious() const {return previous;}
+    inline Node<T> *getPrevious() const {return previous;}
 
     inline void setPrevious(Node *previous) {this->previous = previous;}
 
@@ -29,6 +36,12 @@ private:
     Node<T> *previous;
 };
 
+/*
+ *
+ * Doubly Linked List class
+ * Add a copy constructor and move constructor 
+ * 
+ */
 template <class T>
 class DoublyLinkedList {
 public:
@@ -112,7 +125,7 @@ public:
 
         Node<T> *node = new Node(value);
         tail->setNext(node);
-        node->getPrevious(tail);
+        node->setPrevious(tail);
         tail = node;
         length++;
         return;
@@ -173,111 +186,126 @@ public:
         if (index >= length || index < 0) {
             throw std::out_of_range("Index is out of range.");
         }
-    
-        Node<T> *node = head;
-        int counter = 0;
-        while (node != nullptr) {
-            if (counter == index) {
-                break;
+
+        Node<T> *node = nullptr;
+
+        if (index <= length/2) {
+            node = head;
+            int counter = 0;
+            while (node != nullptr) {
+                if (counter == index) {
+                    break;
+                }
+                node = node->getNext();
+                counter++;
             }
-            node = node->getNext();
-            counter++;
+        } else {
+            node = tail;
+            int counter = length - 1;
+            while (node != nullptr) {
+                if (counter == index) {
+                    break;
+                }
+                node = node->getPrevious();
+                counter--;
+            }
         }
+    
         return node;
     }
 
-    T getValueWithIndex(int index){
-        Node<T> *node = getNodeWithIndex(index);
-        return node->getValue();
-    }
+    // T getValueWithIndex(int index){
+    //     Node<T> *node = getNodeWithIndex(index);
+    //     return node->getValue();
+    // }
 
-    void setValueWithIndex(int index, T value){
-        Node<T> *node = getNodeWithIndex(index);
-        node->setValue(value);
-    }
+    // void setValueWithIndex(int index, T value){
+    //     Node<T> *node = getNodeWithIndex(index);
+    //     node->setValue(value);
+    // }
 
-    bool insertNodeAfterIndex (int index, T value) {
-        Node<T> *node = nullptr;
-        try {
-            node = getNodeWithIndex(index);
-        } catch (...) {
-            return false;
-        }
+    // bool insertNodeAfterIndex (int index, T value) {
+    //     Node<T> *node = nullptr;
+    //     try {
+    //         node = getNodeWithIndex(index);
+    //     } catch (...) {
+    //         return false;
+    //     }
 
-        Node<T> *newNode = new Node(value);
-        newNode->setNext(node->getNext());
-        node->setNext(newNode);
-        length++;
-        return true;
-    }
+    //     Node<T> *newNode = new Node(value);
+    //     newNode->setNext(node->getNext());
+    //     node->setNext(newNode);
+    //     length++;
+    //     return true;
+    // }
 
-    bool insertNodeBeforeIndex (int index, T value) {
-        if (index >= length) {
-            return false;
-        }
-        if (index == 0 || head == tail) {
-            addToHead(value);
-            return true;
-        }
-        return insertNodeAfterIndex(index-1, value);
-    }
+    // bool insertNodeBeforeIndex (int index, T value) {
+    //     if (index >= length) {
+    //         return false;
+    //     }
+    //     if (index == 0 || head == tail) {
+    //         addToHead(value);
+    //         return true;
+    //     }
+    //     return insertNodeAfterIndex(index-1, value);
+    // }
 
-    T removeNodeWithIndex(int index) {
-        if (index == 0) {
-            return deleteFromHead();
-        }
+    // T removeNodeWithIndex(int index) {
+    //     if (index == 0) {
+    //         return deleteFromHead();
+    //     }
 
-        Node<T> *previous = getNodeWithIndex(index-1);
-        Node<T> *node = previous->getNext();
+    //     Node<T> *previous = getNodeWithIndex(index-1);
+    //     Node<T> *node = previous->getNext();
 
-        if (node == tail) {
-            // previous = nullptr;
-            return deleteFromTail();
-        }
+    //     if (node == tail) {
+    //         // previous = nullptr;
+    //         return deleteFromTail();
+    //     }
 
-        T value = node->getValue();
-        previous->setNext(node->getNext());
-        previous = nullptr;
-        delete node;
+    //     T value = node->getValue();
+    //     previous->setNext(node->getNext());
+    //     previous = nullptr;
+    //     delete node;
 
-        return value;
-    }
+    //     return value;
+    // }
 
-    SinglyLinkedList& reverse() {
-        if (isEmpty() || head == tail) {
-            return *this;
-        }
+    // SinglyLinkedList& reverse() {
+    //     if (isEmpty() || head == tail) {
+    //         return *this;
+    //     }
 
-        Node<T> *node = head;
-        head = tail;
-        tail = node;
+    //     Node<T> *node = head;
+    //     head = tail;
+    //     tail = node;
 
-        Node<T> *next = nullptr;
-        Node<T> *previous = nullptr;
+    //     Node<T> *next = nullptr;
+    //     Node<T> *previous = nullptr;
 
-        while (node != nullptr) {
-            next = node->getNext();
-            node->setNext(previous);
-            previous = node;
-            node = next;
-        }
+    //     while (node != nullptr) {
+    //         next = node->getNext();
+    //         node->setNext(previous);
+    //         previous = node;
+    //         node = next;
+    //     }
 
-        return *this;
-    }
+    //     return *this;
+    // }
 
-    bool isValueInList(int value) {
-        if (isEmpty()) {
-            return false;
-        }
-        Node<T> *node = head;
-        while (node != nullptr) {
-            if (node->getValue() == value) {
-                return true;
-            }
-            node = node->getNext();
-        }
-        return false;
-    }
+    // bool isValueInList(int value) {
+    //     if (isEmpty()) {
+    //         return false;
+    //     }
+    //     Node<T> *node = head;
+    //     while (node != nullptr) {
+    //         if (node->getValue() == value) {
+    //             return true;
+    //         }
+    //         node = node->getNext();
+    //     }
+    //     return false;
+    // }
 
     void print(void){
         if(isEmpty()) {
