@@ -52,7 +52,7 @@ public:
     
     ~DoublyLinkedList() {clearList();}
     
-    inline int isEmpty () {return head == nullptr;}
+    inline int isEmpty () const {return head == nullptr;}
 
     void clearList(void);
 
@@ -85,7 +85,7 @@ public:
 
     bool isValueInList(int value);
 
-    void print(void);
+    void print(void) const;
 
 private:
     Node<T> *head;
@@ -152,23 +152,9 @@ void DoublyLinkedList<T>::clearList(void) {
 
 template <class T>
 std::ostream& operator<< (std::ostream& out, const DoublyLinkedList<T>& list) {
-        if (list.head == nullptr) {
-            std::cout << "Doubly Linked list is empty" << std::endl;
-            return out;
-        }
-        Node<T> *node = list.head;
-        int index = 0;
-        if (list.head == list.tail) {
-            std::cout << "[" << index <<"]: \"" << node->getValue() << "\"" << std::endl;
-            return out;
-        }
-        while(node != nullptr) {
-            std::cout << "[" << index <<"]: \"" << node->getValue() << "\"" << std::endl;
-            node = node->getNext();
-            index++;
-        }
-        return out;
-    }
+    list.print();
+    return out;
+}
 
 template <class T>
 void DoublyLinkedList<T>::addToHead(T value) {
@@ -318,7 +304,7 @@ bool DoublyLinkedList<T>::insertNodeAfterIndex (int index, T value) {
 }
 
 template <class T>
-void DoublyLinkedList<T>::print(void) {
+void DoublyLinkedList<T>::print(void) const {
     if(isEmpty()) {
         std::cout << "List is empty" << std::endl;
         return;
@@ -330,6 +316,7 @@ void DoublyLinkedList<T>::print(void) {
     while (node != nullptr) {
         std::cout << "[" << index <<"]: \"" << node->getValue() << "\"" << std::endl;
         node = node->getNext();
+        index++;
     }
     
     return;
